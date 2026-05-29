@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Deluxe Room — Fosua Guest House</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    :root{
+      --cream:#F6F2EA;--cream2:#EFE7DA;--forest:#18434D;--forest2:#225865;
+      --gold:#C5A77B;--gold2:#DFC39E;--stone:#5F6769;--black:#0D242B;--white:#FFFFFF;
+      --font-display:'Cormorant Garamond',Georgia,serif;
+      --font-body:'Jost',sans-serif;
+      --ease:cubic-bezier(0.25,0.1,0.25,1);
+    }
+    html{scroll-behavior:smooth;}
+    body{font-family:var(--font-body);background:var(--cream);color:var(--forest);-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+    a{color:inherit;text-decoration:none;}
+    img{display:block;max-width:100%;}
+
+    .nav{position:fixed;top:0;left:0;right:0;z-index:999;height:72px;display:flex;align-items:center;
+      transition:background 0.4s,backdrop-filter 0.4s,box-shadow 0.4s;}
+    .nav.scrolled{background:rgba(246,242,234,0.94);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 1px 0 rgba(24,67,77,0.15);}
+    .nav__inner{display:flex;align-items:center;justify-content:space-between;width:100%;max-width:1160px;margin:0 auto;padding:0 clamp(20px,5vw,60px);}
+    .nav__logo{display:flex;align-items:center;gap:12px;}
+    .nav__logo-mark{width:44px;height:44px;border-radius:10px;box-shadow:0 8px 24px rgba(13,36,43,0.22);object-fit:contain;}
+    .nav__logo-name{font-family:var(--font-display);font-size:22px;font-weight:500;letter-spacing:0.03em;color:var(--white);}
+    .nav__logo-sub{font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold2);font-weight:400;margin-top:2px;}
+    .nav.scrolled .nav__logo-name{color:var(--forest);}
+    .nav.scrolled .nav__logo-sub{color:var(--gold);}
+    .nav__back{font-size:13px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.7);
+      display:flex;align-items:center;gap:8px;transition:color 0.25s;}
+    .nav__back:hover{color:var(--gold2);}
+    .nav.scrolled .nav__back{color:var(--stone);}
+    .nav.scrolled .nav__back:hover{color:var(--forest);}
+    .nav__book-now{background:var(--gold);color:var(--white)!important;padding:10px 24px;border-radius:2px;
+      font-size:13px;letter-spacing:0.1em;text-transform:uppercase;transition:background 0.25s;}
+    .nav__book-now:hover{background:var(--forest);}
+
+    .room-hero{height:90svh;min-height:560px;position:relative;overflow:hidden;display:flex;align-items:flex-end;}
+    .room-hero__img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+      transform:scale(1.06);transition:transform 6s ease-out;}
+    .room-hero__img.loaded{transform:scale(1);}
+    .room-hero__overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(13,36,43,0.82) 0%,rgba(13,36,43,0.28) 50%,rgba(13,36,43,0.08) 100%);}
+    .room-hero__content{position:relative;z-index:2;padding:0 clamp(20px,5vw,60px) clamp(48px,7vw,80px);max-width:1160px;margin:0 auto;width:100%;}
+    .room-hero__eyebrow{font-size:11px;letter-spacing:0.28em;text-transform:uppercase;color:var(--gold2);margin-bottom:16px;opacity:0;animation:fadeUp 0.9s 0.3s var(--ease) forwards;}
+    .room-hero__title{font-family:var(--font-display);font-size:clamp(48px,8vw,88px);font-weight:300;color:var(--white);line-height:1;opacity:0;animation:fadeUp 0.9s 0.5s var(--ease) forwards;}
+    .room-hero__title em{font-style:italic;color:var(--gold2);}
+    .room-hero__badge{display:inline-block;background:var(--gold);color:var(--white);font-size:11px;letter-spacing:0.15em;text-transform:uppercase;padding:6px 14px;border-radius:2px;margin-top:14px;opacity:0;animation:fadeUp 0.9s 0.62s var(--ease) forwards;}
+    .room-hero__price{font-size:16px;letter-spacing:0.08em;color:rgba(255,255,255,0.7);margin-top:12px;opacity:0;animation:fadeUp 0.9s 0.7s var(--ease) forwards;}
+    .room-hero__cta{margin-top:28px;opacity:0;animation:fadeUp 0.9s 0.9s var(--ease) forwards;}
+    .btn-primary{display:inline-block;background:var(--gold);color:var(--white);padding:14px 36px;font-size:13px;letter-spacing:0.14em;text-transform:uppercase;font-weight:400;border-radius:2px;transition:background 0.25s,transform 0.2s;}
+    .btn-primary:hover{background:var(--forest);transform:translateY(-2px);}
+    .btn-outline-light{display:inline-block;background:transparent;color:var(--white);padding:13px 36px;font-size:13px;letter-spacing:0.14em;text-transform:uppercase;border:1px solid rgba(255,255,255,0.4);border-radius:2px;margin-left:12px;transition:background 0.25s,border-color 0.25s;}
+    .btn-outline-light:hover{background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.7);}
+
+    .room-info{padding:clamp(64px,9vw,120px) 0;}
+    .container{max-width:1160px;margin:0 auto;padding:0 clamp(20px,5vw,60px);}
+    .room-info__grid{display:grid;grid-template-columns:1fr 380px;gap:clamp(40px,6vw,80px);align-items:start;}
+    .section-label{font-size:10px;letter-spacing:0.28em;text-transform:uppercase;color:var(--gold);margin-bottom:14px;}
+    .section-title{font-family:var(--font-display);font-size:clamp(34px,5vw,52px);font-weight:300;line-height:1.1;color:var(--forest);}
+    .section-title em{font-style:italic;color:var(--gold);}
+    .divider{width:40px;height:1px;background:var(--gold);margin:22px 0;}
+    .room-info__body{font-size:17px;font-weight:300;color:var(--stone);line-height:1.85;margin-bottom:16px;}
+    .features-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 20px;margin-top:24px;}
+    .feature-item{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--stone);font-weight:300;}
+    .feature-item svg{width:16px;height:16px;flex-shrink:0;stroke:var(--gold);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+
+    .book-card{background:var(--forest);border-radius:4px;padding:36px 30px;color:var(--white);position:sticky;top:92px;}
+    .book-card__badge{background:var(--gold);color:var(--white);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;padding:5px 12px;border-radius:2px;display:inline-block;margin-bottom:18px;}
+    .book-card__price{font-family:var(--font-display);font-size:42px;font-weight:300;color:var(--gold2);line-height:1;}
+    .book-card__per{font-size:13px;color:rgba(255,255,255,0.5);letter-spacing:0.08em;margin-top:4px;}
+    .book-card__divider{width:100%;height:1px;background:rgba(255,255,255,0.1);margin:22px 0;}
+    .book-card__label{font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:12px;}
+    .book-card__features{display:flex;flex-direction:column;gap:8px;margin-bottom:24px;}
+    .book-card__feat{font-size:14px;color:rgba(255,255,255,0.7);display:flex;align-items:center;gap:8px;}
+    .book-card__feat::before{content:'✓';color:var(--gold2);font-size:12px;}
+    .book-card .btn-primary{display:block;text-align:center;width:100%;padding:16px;font-size:14px;margin-bottom:12px;}
+    .book-card__note{font-size:12px;color:rgba(255,255,255,0.35);text-align:center;line-height:1.6;}
+
+    .room-gallery{padding:0 0 clamp(64px,9vw,120px);}
+    .room-gallery__header{text-align:center;margin-bottom:48px;}
+    .room-gallery__strip{display:flex;gap:16px;overflow:hidden;position:relative;}
+    .gallery-track{display:flex;gap:16px;transition:transform 0.6s cubic-bezier(0.25,0.46,0.45,0.94);}
+    .gallery-slide{flex:0 0 calc(33.333% - 11px);border-radius:6px;overflow:hidden;position:relative;aspect-ratio:4/3;cursor:pointer;}
+    .gallery-slide img{width:100%;height:100%;object-fit:cover;transition:transform 0.5s var(--ease),filter 0.5s var(--ease);}
+    .gallery-slide:hover img{transform:scale(1.06);filter:brightness(0.85);}
+    .gallery-slide__overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity 0.4s;}
+    .gallery-slide:hover .gallery-slide__overlay{opacity:1;}
+    .gallery-slide__zoom{width:48px;height:48px;border-radius:50%;background:rgba(197,167,123,0.9);display:flex;align-items:center;justify-content:center;color:white;font-size:20px;transform:scale(0.7);transition:transform 0.35s;}
+    .gallery-slide:hover .gallery-slide__zoom{transform:scale(1);}
+    .gallery-nav{display:flex;justify-content:center;gap:12px;margin-top:24px;}
+    .gallery-btn{width:44px;height:44px;border-radius:50%;border:1px solid rgba(24,67,77,0.2);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--forest);transition:all 0.25s;font-size:18px;}
+    .gallery-btn:hover{background:var(--forest);color:var(--white);border-color:var(--forest);}
+
+    .lightbox{position:fixed;inset:0;z-index:9999;background:rgba(13,36,43,0.96);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.35s;}
+    .lightbox.open{opacity:1;pointer-events:all;}
+    .lightbox__img{max-width:90vw;max-height:88vh;object-fit:contain;border-radius:4px;transform:scale(0.92);transition:transform 0.35s var(--ease);}
+    .lightbox.open .lightbox__img{transform:scale(1);}
+    .lightbox__close{position:absolute;top:24px;right:28px;font-size:28px;color:rgba(255,255,255,0.6);background:none;border:none;cursor:pointer;transition:color 0.2s;}
+    .lightbox__close:hover{color:var(--gold2);}
+
+    .reveal{opacity:0;transform:translateY(24px);transition:opacity 0.75s var(--ease),transform 0.75s var(--ease);}
+    .reveal.visible{opacity:1;transform:translateY(0);}
+    .reveal-delay-1{transition-delay:0.1s;}
+    .reveal-delay-2{transition-delay:0.22s;}
+    .reveal-delay-3{transition-delay:0.34s;}
+
+    .footer{background:var(--black);color:rgba(255,255,255,0.5);padding:48px 0 24px;}
+    .footer__inner{display:flex;flex-direction:column;align-items:center;gap:18px;text-align:center;}
+    .footer__name{font-family:var(--font-display);font-size:22px;font-weight:400;color:var(--white);}
+    .footer__sub{font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold);}
+    .footer__links{display:flex;gap:24px;flex-wrap:wrap;justify-content:center;}
+    .footer__links a{font-size:13px;color:rgba(255,255,255,0.4);transition:color 0.25s;}
+    .footer__links a:hover{color:var(--gold2);}
+    .footer__copy{font-size:12px;margin-top:8px;}
+
+    @keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+
+    @media(max-width:900px){
+      .room-info__grid{grid-template-columns:1fr;}
+      .book-card{position:static;}
+      .gallery-slide{flex:0 0 calc(50% - 8px);}
+    }
+    @media(max-width:600px){
+      .gallery-slide{flex:0 0 100%;}
+      .features-grid{grid-template-columns:1fr;}
+    }
+  </style>
+</head>
+<body>
+
+<nav class="nav" id="nav">
+  <div class="nav__inner">
+    <a href="index.html" class="nav__logo" aria-label="Back to Fosua Guest House">
+      <img src="assets/fosuaguesthouse@2x.jpg" alt="Fosua Guest House logo" class="nav__logo-mark"/>
+      <span>
+        <div class="nav__logo-name">Fosua</div>
+        <div class="nav__logo-sub">Guest House · Aduman</div>
+      </span>
+    </a>
+    <a href="index.html#rooms" class="nav__back">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+      All Rooms
+    </a>
+    <a href="index.html#booking" class="nav__book-now">Book Now</a>
+  </div>
+</nav>
+
+<section class="room-hero" aria-label="Deluxe Room">
+  <img src="assets/hotel-alba-roomtypes-deluxe-1.jpg" alt="Deluxe Room at Fosua Guest House" class="room-hero__img" id="heroImg"/>
+  <div class="room-hero__overlay"></div>
+  <div class="room-hero__content">
+    <p class="room-hero__eyebrow">Fosua Guest House · Aduman</p>
+    <h1 class="room-hero__title">Deluxe <em>Room</em></h1>
+    <span class="room-hero__badge">Most Popular</span>
+    <p class="room-hero__price">From GHS 280 / night</p>
+    <div class="room-hero__cta">
+      <a href="index.html#booking" class="btn-primary">Book This Room</a>
+      <a href="#gallery" class="btn-outline-light">View Gallery</a>
+    </div>
+  </div>
+</section>
+
+<section class="room-info">
+  <div class="container">
+    <div class="room-info__grid">
+      <div>
+        <p class="section-label reveal">Premium Accommodation</p>
+        <h2 class="section-title reveal reveal-delay-1">Deluxe <em>Room</em></h2>
+        <div class="divider reveal reveal-delay-2"></div>
+        <p class="room-info__body reveal reveal-delay-2">
+          Spacious, serene, and beautifully furnished, the Deluxe Room is the ultimate expression of comfort at Fosua Guest House. Featuring a plush queen-size bed, warm décor inspired by Ghanaian heritage, and a private balcony with peaceful views of the town, this room is crafted for guests who deserve a little extra.
+        </p>
+        <p class="room-info__body reveal reveal-delay-3">
+          Air-conditioned for year-round comfort, with a water heater, mini fridge, flat-screen TV, and high-speed Wi-Fi — every detail has been carefully considered to make your stay effortless. Perfect for couples, extended stays, or anyone who values space and quality.
+        </p>
+        <div class="features-grid reveal reveal-delay-3">
+          <div class="feature-item"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>Queen-Size Bed</div>
+          <div class="feature-item"><svg viewBox="0 0 24 24"><path d="M12 3v18M5 12h14M7.5 7.5l9 9M16.5 7.5l-9 9"/></svg>Air Conditioning</div>
+          <div class="feature-item"><svg viewBox="0 0 24 24"><path d="M4 10c4-4 8-4 12 0"/><path d="M7 13c2.5-2.5 5.5-2.5 8 0"/><circle cx="12" cy="17" r="1.5"/></svg>High-Speed Wi-Fi</div>
+          <div class="feature-item"><svg viewBox="0 0 24 24"><path d="M5 8h14M5 8a2 2 0 1 0 0-4h14a2 2 0 1 0 0 4v10a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V8Z"/></svg>Mini Fridge</div>
+          <div class="feature-item"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="12" rx="2"/><path d="M8 21h8M10 17v4M14 17v4"/></svg>Flat-Screen TV</div>
+          <div class="feature-item"><svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 0 1 9 9v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-5a9 9 0 0 1 9-9Z"/></svg>Water Heater</div>
+          <div class="feature-item"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>Study Desk & Chair</div>
+          <div class="feature-item"><svg viewBox="0 0 24 24"><path d="M12 2v20M2 12h20"/></svg>Private Balcony</div>
+          <div class="feature-item"><svg viewBox="0 0 24 24"><path d="M12 5a4 4 0 0 1 4 4v3h1a2 2 0 0 1 0 4H7a2 2 0 0 1 0-4h1V9a4 4 0 0 1 4-4Z"/></svg>Daily Housekeeping</div>
+          <div class="feature-item"><svg viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8Z"/></svg>Generator Backup</div>
+        </div>
+      </div>
+
+      <div class="book-card reveal reveal-delay-2">
+        <div class="book-card__badge">Most Popular</div>
+        <div class="book-card__price">GHS 280</div>
+        <div class="book-card__per">per night · taxes included</div>
+        <div class="book-card__divider"></div>
+        <div class="book-card__label">Room Highlights</div>
+        <div class="book-card__features">
+          <div class="book-card__feat">Queen-size bed with luxury linen</div>
+          <div class="book-card__feat">Private balcony with town view</div>
+          <div class="book-card__feat">Air conditioning & water heater</div>
+          <div class="book-card__feat">Mini fridge, TV & Wi-Fi</div>
+          <div class="book-card__feat">En-suite bathroom</div>
+          <div class="book-card__feat">Study desk & daily housekeeping</div>
+        </div>
+        <a href="index.html#booking" class="btn-primary">Reserve Now</a>
+        <p class="book-card__note">Or call us directly:<br><a href="tel:+233559530508" style="color:var(--gold2);">+233 55 953 0508</a></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="room-gallery" id="gallery">
+  <div class="container">
+    <div class="room-gallery__header">
+      <p class="section-label reveal">Room Gallery</p>
+      <h2 class="section-title reveal reveal-delay-1">Explore the <em>Space</em></h2>
+      <div class="divider" style="margin:22px auto;"></div>
+    </div>
+    <div class="room-gallery__strip">
+      <div class="gallery-track" id="galleryTrack">
+        <div class="gallery-slide" onclick="openLightbox(0)">
+          <img src="assets/hotel-alba-roomtypes-deluxe-1.jpg" alt="Deluxe Room - Main View"/>
+          <div class="gallery-slide__overlay"><div class="gallery-slide__zoom">⊕</div></div>
+        </div>
+        <div class="gallery-slide" onclick="openLightbox(1)">
+          <img src="assets/hotel-alba-roomtypes-deluxe-1.jpg" alt="Deluxe Room - Lounge Area" style="object-position:left;"/>
+          <div class="gallery-slide__overlay"><div class="gallery-slide__zoom">⊕</div></div>
+        </div>
+        <div class="gallery-slide" onclick="openLightbox(2)">
+          <img src="assets/hotel-alba-roomtypes-deluxe-1.jpg" alt="Deluxe Room - Balcony View" style="object-position:right;"/>
+          <div class="gallery-slide__overlay"><div class="gallery-slide__zoom">⊕</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="gallery-nav">
+      <button class="gallery-btn" onclick="slideGallery(-1)" aria-label="Previous">&#8592;</button>
+      <button class="gallery-btn" onclick="slideGallery(1)" aria-label="Next">&#8594;</button>
+    </div>
+  </div>
+</section>
+
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Image viewer">
+  <button class="lightbox__close" onclick="closeLightbox()" aria-label="Close">✕</button>
+  <img class="lightbox__img" id="lightboxImg" src="" alt="Room photo"/>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer__inner">
+      <div>
+        <div class="footer__name">Fosua Guest House</div>
+        <div class="footer__sub">Aduman, Ashanti Region · Ghana</div>
+      </div>
+      <div class="footer__links">
+        <a href="index.html">Home</a>
+        <a href="index.html#about">About</a>
+        <a href="index.html#rooms">Rooms</a>
+        <a href="index.html#booking">Book Now</a>
+        <a href="tel:+233559530508">+233 55 953 0508</a>
+        <a href="mailto:info@fosuaguesthouse.com">info@fosuaguesthouse.com</a>
+      </div>
+      <p class="footer__copy">&copy; 2026 Fosua Guest House. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', function(){
+    nav.classList.toggle('scrolled', window.scrollY > 40);
+  }, {passive:true});
+
+  const heroImg = document.getElementById('heroImg');
+  heroImg.onload = function(){ heroImg.classList.add('loaded'); };
+  if(heroImg.complete) heroImg.classList.add('loaded');
+
+  const reveals = document.querySelectorAll('.reveal');
+  const obs = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){ e.target.classList.add('visible'); obs.unobserve(e.target); }
+    });
+  }, {threshold:0.1, rootMargin:'0px 0px -40px 0px'});
+  reveals.forEach(function(el){ obs.observe(el); });
+
+  let current = 0;
+  const track = document.getElementById('galleryTrack');
+  const slides = track.querySelectorAll('.gallery-slide');
+  const total = slides.length;
+
+  window.slideGallery = function(dir){
+    current = (current + dir + total) % total;
+    const slideW = slides[0].offsetWidth + 16;
+    track.style.transform = 'translateX(-' + (current * slideW) + 'px)';
+  };
+
+  const galleryImgs = ['/Users/work/Downloads/fosuaguesthouse/assets/hotel-alba-roomtypes-deluxe-1.jpg'];
+  window.openLightbox = function(idx){
+    document.getElementById('lightboxImg').src = galleryImgs[idx];
+    document.getElementById('lightbox').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  };
+  window.closeLightbox = function(){
+    document.getElementById('lightbox').classList.remove('open');
+    document.body.style.overflow = '';
+  };
+  document.getElementById('lightbox').addEventListener('click', function(e){
+    if(e.target === this) closeLightbox();
+  });
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape') closeLightbox();
+  });
+})();
+</script>
+</body>
+</html>
